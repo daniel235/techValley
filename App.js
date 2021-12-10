@@ -8,6 +8,7 @@
 
 import React from 'react';
 import type {Node} from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import {
   SafeAreaView,
   ScrollView,
@@ -22,11 +23,14 @@ import {
 
 const App: () => Node = () => {
   return (
+    <NavigationContainer>
       <ScrollView>
         <View>
           <Text>TechValley</Text>
+          <Text>Stable</Text>
         </View>
       </ScrollView>
+    </NavigationContainer>
     
   );
 };
