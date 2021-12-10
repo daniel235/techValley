@@ -10,7 +10,6 @@ import React from 'react';
 import type {Node} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import {
   SafeAreaView,
@@ -27,7 +26,6 @@ import Stores from './components/stores';
 import Profile from './components/profile';
 
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
 
 const App: () => Node = () => {
   return (
