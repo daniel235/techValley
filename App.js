@@ -29,7 +29,8 @@ import Stores from './components/stores';
 import Profile from './components/profile';
 import SignIn from './components/authentication/signIn';
 import SignUp from './components/authentication/signUp';
-import SplashScreen from './components/splash';
+
+import SplashScreen from 'react-native-splash-screen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -50,7 +51,7 @@ const App: () => Node = () => {
           return {
             ...prevState,
             isSignout: false,
-            userToken: null,
+            userToken: action.token,
           }
         case 'SIGN_OUT':
           return {
@@ -67,32 +68,64 @@ const App: () => Node = () => {
     }
   );
 
+  React.useEffect(() => {
+    const bootstrapAsync = async() => {
+      let userToken;
+      try {
+        userToken = await AsyncStorage.getItem('userToken');
+      } catch(e) {
+        userToken = null;
+      }
+
+      dispatch({type: 'RESTORE_TOKEN', token: userToken});
+    }
+
+    bootstrapAsync();
+    SplashScreen.hide();
+  }, []);
 
 
-  if(state.isLoading){
+  //get token from server
+  const authContext = React.useMemo(
+    () => ({
+      signIn: async data => {
+        //send username password
+        
+        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+      },
+      signOut: () => dispatch({type: 'SIGN_OUT'}),
+      signUp: async data => {
+        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+      },
+    }),
+    []
+  );
+
+  /*if(state.isLoading){
     return <SplashScreen/>
-  }
-
+  }*/
+  
   return (
-    <NavigationContainer>
-      state.userToken == null ? (
-        <>
-          <Tab.Navigator initialRouteName="Home">
-            <Tab.Screen name="Home" component={HomeScreen}/>
-            <Tab.Screen name="Store" component={Stores}/>
-            <Tab.Screen name="Profile" component={Profile}/>
-          </Tab.Navigator>
-        </> 
-        ) : (
+    <AuthContext.Provider value={authContext}>
+      <NavigationContainer>
+        {state.userToken == null ? (
           <>
-            <Stack.Navigator initialRouteName="SignIn">
-              <Stack.Screen name="SignIn" component={SignIn}/>
-              <Stack.Screen name="SignUp" component={SignUp}/>
-            </Stack.Navigator>
-          </>
-        )
-    </NavigationContainer>
-    
+            <Tab.Navigator initialRouteName="Home">
+              <Tab.Screen name="Home" component={HomeScreen}/>
+              <Tab.Screen name="Store" component={Stores}/>
+              <Tab.Screen name="Profile" component={Profile}/>
+            </Tab.Navigator>
+          </> 
+          ) : (
+            <>
+              <Stack.Navigator initialRouteName="SignIn">
+                <Stack.Screen name="SignIn" component={SignIn}/>
+                <Stack.Screen name="SignUp" component={SignUp}/>
+              </Stack.Navigator>
+            </>
+          )}
+      </NavigationContainer>
+    </AuthContext.Provider>
   );
 };
 

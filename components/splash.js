@@ -1,10 +1,10 @@
 import React from 'react';
-import {Text} from 'react-native';
+import {Text, View} from 'react-native';
 
 const SplashScreen = () => {
     return(
         <View>
-            
+            <Text>Splash</Text>
         </View>
     );
 }
