@@ -6,10 +6,11 @@
  * @flow strict-local
  */
 
-import React from 'react';
-import type {Node} from 'react';
+import * as React from 'react';
+import type { Node } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import {
   SafeAreaView,
@@ -21,21 +22,75 @@ import {
   View,
 } from 'react-native';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import HomeScreen from './components/home';
 import Stores from './components/stores';
 import Profile from './components/profile';
+import SignIn from './components/authentication/signIn';
+import SignUp from './components/authentication/signUp';
+import SplashScreen from './components/splash';
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+const AuthContext = React.createContext();
 
 const App: () => Node = () => {
+  const [state, dispatch] = React.useReducer(
+    (prevState, action) => {
+      switch(action.type) {
+        case 'RESTORE_TOKEN':
+          return { 
+            ...prevState,
+            userToken: action.token,
+            isLoading: false,
+          };
+        case 'SIGN_IN':
+          return {
+            ...prevState,
+            isSignout: false,
+            userToken: null,
+          }
+        case 'SIGN_OUT':
+          return {
+            ...prevState,
+            isSignout: true,
+            userToken: null,
+          }
+      }
+    },
+    {
+      isLoading: true,
+      isSignout: false,
+      userToken: null,
+    }
+  );
+
+
+
+  if(state.isLoading){
+    return <SplashScreen/>
+  }
+
   return (
     <NavigationContainer>
-        <Tab.Navigator initialRouteName="Home">
-          <Tab.Screen name="Home" component={HomeScreen}/>
-          <Tab.Screen name="Store" component={Stores}/>
-          <Tab.Screen name="Profile" component={Profile}/>
-        </Tab.Navigator>
-        
+      state.userToken == null ? (
+        <>
+          <Tab.Navigator initialRouteName="Home">
+            <Tab.Screen name="Home" component={HomeScreen}/>
+            <Tab.Screen name="Store" component={Stores}/>
+            <Tab.Screen name="Profile" component={Profile}/>
+          </Tab.Navigator>
+        </> 
+        ) : (
+          <>
+            <Stack.Navigator initialRouteName="SignIn">
+              <Stack.Screen name="SignIn" component={SignIn}/>
+              <Stack.Screen name="SignUp" component={SignUp}/>
+            </Stack.Navigator>
+          </>
+        )
     </NavigationContainer>
     
   );
