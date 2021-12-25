@@ -31,11 +31,11 @@ import SignIn from './components/authentication/signIn';
 import SignUp from './components/authentication/signUp';
 
 import SplashScreen from 'react-native-splash-screen';
+import AuthContext from './components/authentication/authText';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-const AuthContext = React.createContext();
 
 const App: () => Node = () => {
   const [state, dispatch] = React.useReducer(
@@ -84,14 +84,28 @@ const App: () => Node = () => {
     SplashScreen.hide();
   }, []);
 
-
+  var ServerToken = "";
   //get token from server
   const authContext = React.useMemo(
     () => ({
       signIn: async data => {
+        console.log(data);
         //send username password
-        
-        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+        fetch("http://10.0.2.2:80/form", {
+          method: 'POST', // or 'PUT'
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        }).then((datas) => {
+            console.log(JSON.stringify(datas._bodyBlob._data.__collector));
+            ServerToken = "successToken";
+          }
+          ).catch((err) => {
+          console.log(err);
+        });
+        await AsyncStorage.setItem('userToken', ServerToken);
+        dispatch({type: 'SIGN_IN', token: ServerToken});
       },
       signOut: () => dispatch({type: 'SIGN_OUT'}),
       signUp: async data => {
@@ -108,7 +122,7 @@ const App: () => Node = () => {
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
-        {state.userToken == null ? (
+        {state.userToken != null ? (
           <>
             <Tab.Navigator initialRouteName="Home">
               <Tab.Screen name="Home" component={HomeScreen}/>
