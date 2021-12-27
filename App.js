@@ -89,16 +89,15 @@ const App: () => Node = () => {
   const authContext = React.useMemo(
     () => ({
       signIn: async data => {
-        console.log(data);
         //send username password
-        fetch("http://10.0.2.2:80/form", {
+        await fetch("http://10.0.2.2:80/form", {
           method: 'POST', // or 'PUT'
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(data),
         }).then((datas) => {
-            console.log(JSON.stringify(datas._bodyBlob._data.__collector));
+            console.log(datas);
             ServerToken = "successToken";
           }
           ).catch((err) => {

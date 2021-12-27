@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TextInput, Button } from 'react-native';
+import {Text, View, TextInput, Button, StyleSheet } from 'react-native';
 import AuthContext from './authText';
 
 const SignIn = () => {
@@ -11,6 +11,7 @@ const SignIn = () => {
     return (
         <View>
             <TextInput
+                style={styles.username}
                 placeholder="Username"
                 value={username}
                 onChangeText={setUsername}
@@ -25,5 +26,13 @@ const SignIn = () => {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    username : {
+        height: 40,
+        margin: 12,
+        padding: 10
+    }
+});
 
 export default SignIn;
