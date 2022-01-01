@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, TextInput, Button } from 'react-native';
 
-const SignIn = () => {
+const SignUp = () => {
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
 

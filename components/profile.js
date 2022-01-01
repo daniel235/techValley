@@ -1,10 +1,15 @@
 import React from 'react';
-import {Text} from 'react-native';
+import {Text, View, Button} from 'react-native';
+import AuthContext from './authentication/authText';
 
 
 const Profile = () => {
+    const { signOut } = React.useContext(AuthContext);
     return(
-        <Text>My Profile!</Text>
+        <View>
+            <Text>My Profile!</Text>
+            <Button title="Sign Out" onPress={() => signOut()} />
+        </View>
     );
 }
 

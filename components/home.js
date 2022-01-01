@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, FlatList, StyleSheet} from 'react-native';
-
+import storeInfo from './apis/data';
 
 var name = "Danny";
 
@@ -19,6 +19,9 @@ const DATA = [
     },
   ];
 
+var newData = storeInfo();
+
+
 const Item = ({title}) => (
     <View style={Styles.itemStyle}>
         <Text style={Styles.itemText}>{title}</Text>
@@ -34,11 +37,16 @@ const HomeScreen = () => {
         <View style={Styles.homeView}>
             <Text>Hello {name}</Text>
             <FlatList
+                style={Styles.horizontalList}
                 horizontal={true}
                 data={DATA}
                 renderItem={renderItem}
             />
-            
+            <FlatList
+                style={Styles.horizontalList}
+                data={DATA}
+                renderItem={renderItem}
+            />
             <Text>Home</Text>
         </View>
     );
@@ -52,6 +60,10 @@ const Styles = StyleSheet.create({
         backgroundColor : "#2C2181",
         color: 'white'
     },
+    horizontalList : {
+        backgroundColor : 'white',
+        height: 40,
+    },
     itemStyle : {
         marginTop: 32,
         marginBottom: 22,
@@ -61,6 +73,6 @@ const Styles = StyleSheet.create({
     itemText : {
         fontSize: 20,
         fontWeight: '500',
-        color: 'white'
+        color: 'black'
     }
 })

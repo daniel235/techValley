@@ -17,6 +17,7 @@ const SignIn = () => {
                 onChangeText={setUsername}
             />
             <TextInput
+                style={styles.pass}
                 placeholder="Password"
                 value={password}
                 onChangeText={setPassword}
@@ -29,6 +30,11 @@ const SignIn = () => {
 
 const styles = StyleSheet.create({
     username : {
+        height: 40,
+        margin: 12,
+        padding: 10
+    },
+    pass : {
         height: 40,
         margin: 12,
         padding: 10

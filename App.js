@@ -96,7 +96,7 @@ const App: () => Node = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(data),
-        }).then((datas) => {
+        }).then((datas) => datas.json()).then((datas) => {
             console.log(datas);
             ServerToken = "successToken";
           }
