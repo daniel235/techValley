@@ -19,8 +19,6 @@ const DATA = [
     },
   ];
 
-var newData = storeInfo();
-
 
 const Item = ({title}) => (
     <View style={Styles.itemStyle}>
@@ -30,9 +28,29 @@ const Item = ({title}) => (
 
 const renderItem = ({item}) => (
     <Item title={item.title}/>
-)
+);
+
+const renderStore = ({item}) => (
+    <Item title={item.name}/>
+);
+
 
 const HomeScreen = () => {
+    const [data, setData] = React.useState([]);
+
+    React.useEffect(() => {
+        const networkRequest = async() => {
+            let newData;
+            try {   
+                newData = await storeInfo();
+                setData(newData);
+                console.log("new data ");
+            } catch(e) {
+                console.log(e);
+            }
+        }
+        networkRequest();
+    }, []);
     return(
         <View style={Styles.homeView}>
             <Text>Hello {name}</Text>
@@ -44,8 +62,8 @@ const HomeScreen = () => {
             />
             <FlatList
                 style={Styles.horizontalList}
-                data={DATA}
-                renderItem={renderItem}
+                data={data}
+                renderItem={renderStore}
             />
             <Text>Home</Text>
         </View>
